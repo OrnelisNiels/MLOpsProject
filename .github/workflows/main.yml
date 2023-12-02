@@ -60,7 +60,7 @@ jobs:
       - name: 'Start compute'
         uses: azure/CLI@v1
         id: azure-ml-compute-start
-        if: ${{ steps.azure-ml-compute.outcome == 'success' || steps.azure-ml-compute.outcome == 'skipped' }}
+        if: ${{ steps.azure-ml-compute.outcome == 'skipped' }}
         with:
           azcliversion: 2.53.0
           inlineScript: |
