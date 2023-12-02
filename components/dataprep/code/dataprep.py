@@ -52,19 +52,15 @@ def main():
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
                 img_resized.convert("RGB").save(output_file)
 
-                # Apply data augmentation and save augmented images
-                augmented_images = []
-                img_array = np.array(img_resized)
-                img_array = img_array.reshape((1,) + img_array.shape)
-                for batch in datagen.flow(img_array, batch_size=1):
-                    augmented_images.append(batch[0].astype(np.uint8))
-                    if len(augmented_images) >= 2:  # Adjust the number of augmentations as needed
-                        break
+                # Augment the resized image
+                augmented_images = datagen.flow(np.expand_dims(img_resized, 0))[0]
 
-                for i, augmented_img in enumerate(augmented_images):
-                    augmented_img_pil = Image.fromarray(augmented_img)
-                    augmented_output_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
-                    augmented_img_pil.convert("RGB").save(augmented_output_file)
+                # Save the augmented images
+                for i, augmented_image in enumerate(augmented_images):
+                    output_filename = f"augmented_{i}_{os.path.basename(file)}"
+                    output_file = os.path.join(output_class_folder, output_filename)
+                    augmented_image = Image.fromarray(augmented_image.astype('uint8'))
+                    augmented_image.convert("RGB").save(output_file)
 
 if __name__ == "__main__":
     main()
