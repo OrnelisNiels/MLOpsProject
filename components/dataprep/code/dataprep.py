@@ -61,6 +61,9 @@ def main():
                 for i in range(5):  # Generating 5 augmented images per original image
                     aug_img = Image.fromarray(aug_iter.next()[0].astype('uint8'))
                     aug_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
+
+                    # Convert to RGB before saving
+                    aug_img = aug_img.convert("RGB")
                     aug_img.save(aug_file)
 
 if __name__ == "__main__":
