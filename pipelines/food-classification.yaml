@@ -2,7 +2,7 @@ $schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
 
 name: food-classification
 type: pipeline
-displayName: Food Classification
+display_name: Food Classification
 experiment_name: classification
 
 inputs:
