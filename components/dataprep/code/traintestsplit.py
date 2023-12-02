@@ -44,15 +44,13 @@ def main():
         food_images = []
 
         for subfolder in subfolders:
-            subfolder_contents = glob(subfolder + "*")
-            print(f"Contents of subfolder {subfolder}:")
-            print(subfolder_contents)
             class_folder = glob(os.path.join(subfolder, "*"))
+            food_images.extend(class_folder)
             
-            for img in class_folder:
-                image = glob(os.path.join(img, "*.jpg"))
-                print (image)
-                food_images.append(image)
+            # for img in class_folder:
+            #     image = glob(os.path.join(img, "*.jpg"))
+            #     print (image)
+            #     food_images.append(image)
 
         # food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
         print(f"Found {len(food_images)} images for {dataset}")
