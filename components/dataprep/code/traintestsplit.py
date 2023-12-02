@@ -50,7 +50,9 @@ def main():
             class_folder = glob(os.path.join(subfolder, "*"))
             
             for img in class_folder:
-                food_images.append(img)
+                image = glob(os.path.join(img, "*.jpg"))
+                print (image)
+                food_images.append(image)
 
         # food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
         print(f"Found {len(food_images)} images for {dataset}")
