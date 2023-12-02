@@ -1,0 +1,34 @@
+name: Azure data preperation, training and deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      create_compute:
+        description: 'Create compute'
+        required: false
+        type: boolean
+        default: true
+      train_model:
+        description: 'Train model'
+        required: false
+        type: boolean
+        default: true
+      skip_training_pipeline:
+        description: 'Skip training pipeline'
+        required: false
+        type: boolean
+        default: false
+      deploy_model:
+        description: 'Deploy model'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  GROUP: MLops
+  WORKSPACE: ornelis-niels-ml
+  LOCATION: westeurope
+  CREATE_COMPUTE: ${{ github.event.inputs.create_compute }}
+  TRAIN_MODEL: ${{ github.event.inputs.train_model }}
+  SKIP_TRAINING_PIPELINE: ${{ github.event.inputs.skip_training_pipeline }}
+  DEPLOY_MODEL: ${{ github.event.inputs.deploy_model }}
