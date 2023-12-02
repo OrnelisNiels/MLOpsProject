@@ -55,14 +55,12 @@ def main():
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
                 img_resized.convert("RGB").save(output_file)
 
-                # # Apply data augmentation and save augmented images
-                # aug_iter = datagen.flow(img_array, batch_size=1)
-                # for i in range(5):  # Generating 5 augmented images per original image
-                #     aug_img = Image.fromarray(aug_iter.next()[0].astype('uint8')[:, :, :3])  # Keep only the first 3 channels
-                #     aug_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
+                # Generate 5 augmented images and save them to the output directory
+                for i, batch in enumerate(datagen.flow(img_array, batch_size=1)):
+                    if i >= 5:
+                        break
 
-                #     # Convert to RGB before saving
-                #     aug_img.convert("RGB").save(aug_file)
-
+                    augmented_img = Image.fromarray(batch[0].astype(np.uint8))
+                    augmented_img.save(os.path.join(output_class_folder, f"augmented_{i}_{os.path.basename(file)}"))
 if __name__ == "__main__":
     main()
