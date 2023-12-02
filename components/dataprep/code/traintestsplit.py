@@ -36,6 +36,9 @@ def main():
     for dataset in datasets:
         print(f"Processing dataset: {dataset}")
         print(glob(dataset))
+        print(glob(os.path.join(dataset, "*")))
+        print(glob(os.path.join(dataset, "*/*.jpg")))
+        print(glob(os.path.join(dataset, "*/*.jpg"))[:5])
         food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
         print(f"Found {len(food_images)} images for {dataset}")
 
