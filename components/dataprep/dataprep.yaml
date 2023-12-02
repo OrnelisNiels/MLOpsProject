@@ -1,0 +1,18 @@
+name: data_prep_image_resize_augment
+version: 1.0.0
+display_name: Data preperation, Image resizing, Image augmentation
+is_deterministic: True
+type: command
+description: Reads a dataset of images and preprocesses them by resizing and augmenting them.
+inputs:
+  data:
+    type: uri_folder
+    optional: false
+outputs:
+  output_data:
+    type: uri_folder
+code: ./code
+environment: azureml:aml-Pillow-cli:0.1.0
+resources:
+  instance_count: 1
+command: 'python dataprep.py --data ${{inputs.data}} --output_data ${{outputs.output_data}}'

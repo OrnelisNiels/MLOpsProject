@@ -1,0 +1,51 @@
+$schema: https://azuremlschemas.azureedge.net/latest/pipelineJob.schema.json
+
+name: food-classification
+type: pipeline
+displayName: Food Classification
+experiment_name: classification
+
+inputs:
+  training_test_split_factor: 20
+  epochs: 5
+outputs:
+  model:
+    type: uri_folder
+
+settings: 
+  default_compute: azureml:cli-MLops-compute
+
+jobs:
+  data_prep:
+    type: command
+    component: ../components/dataprep/dataprep.yaml
+
+    inputs:
+      data:
+        type: uri_folder
+        path: azureml:food:1
+    
+    outputs:
+      output_data:
+        mode: rw_mount
+    
+  # data_split:
+  #   type: command
+  #   component: ../components/dataprep/data_split.yaml
+
+  #   inputs:
+  #     food_train: ${{parent.jobs.data_prep.outputs.output_data}}
+  #     food_test:
+  #       type: uri_folder
+  #       path: data_prep.outputs.output_data
+  #     food_validation:
+  #       type: uri_folder
+  #       path: data_prep.outputs.output_data
+  #     train_test_split_factor: ${{parent.inputs.training_test_split_factor}}
+
+  #   outputs:
+  #     training_data:
+  #       mode: rw_mount
+  #     testing_data:
+  #       mode: rw_mount
+  
