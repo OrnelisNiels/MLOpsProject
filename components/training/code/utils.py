@@ -12,10 +12,17 @@ def getTargets(filepaths: List[str]) -> List[str]:
 
     return labels
 
+from typing import List
+from tensorflow.keras.utils import to_categorical
+import numpy as np
+
 def encodeLabels(y_train: List, y_test: List):
     label_encoder = LabelEncoder()
     y_train_labels = label_encoder.fit_transform(y_train)
     y_test_labels = label_encoder.transform(y_test)
+
+    if len(y_train_labels) == 0 or len(y_test_labels) == 0:
+        raise ValueError("Empty label array. Make sure your data is correctly loaded.")
 
     y_train_1h = to_categorical(y_train_labels)
     y_test_1h = to_categorical(y_test_labels)
