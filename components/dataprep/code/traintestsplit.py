@@ -28,11 +28,11 @@ def main():
     train_test_split_factor = args.split_size / 100
     datasets = args.datasets
 
+    print( datasets)
+    
     training_datapaths = []
     testing_datapaths = []
 
-    print("Contents of INPUT_food_data directory:")
-    print(os.listdir("/mnt/azureml/cr/j/94cb1d9983d848959152f5b08f73ebe3/cap/data-capability/wd/INPUT_food_data"))
     for dataset in datasets:
         print(f"Processing dataset: {dataset}")
         print(glob(dataset))
