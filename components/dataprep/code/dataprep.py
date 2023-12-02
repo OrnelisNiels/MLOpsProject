@@ -24,10 +24,12 @@ def main():
 
     # Data augmentation settings (random rotations and flips)
     datagen = ImageDataGenerator(
-        rotation_range=180,  # Random rotations from 0 to 180 degrees
-        horizontal_flip=True,  # Random horizontal flips
-        vertical_flip=True,  # Random vertical flips
+        rotation_range=180,        # Random rotations from 0 to 180 degrees
+        horizontal_flip=True,      # Random horizontal flips
+        vertical_flip=True,        # Random vertical flips
+        channel_shift_range=0,     # Ensure the number of channels remains the same
     )
+
 
     # Iterate through train, test, validation folders
     for split_folder in ["train", "test", "validation"]:
@@ -56,11 +58,11 @@ def main():
                 # Apply data augmentation and save augmented images
                 aug_iter = datagen.flow(img_array, batch_size=1)
                 for i in range(5):  # Generating 5 augmented images per original image
-                    aug_img = Image.fromarray(aug_iter.next()[0].astype('uint8'))
+                    aug_img = Image.fromarray(aug_iter.next()[0].astype('uint8')[:, :, :3])  # Keep only the first 3 channels
                     aug_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
 
                     # Convert to RGB before saving
                     aug_img.convert("RGB").save(aug_file)
-
+                    
 if __name__ == "__main__":
     main()
