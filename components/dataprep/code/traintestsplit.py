@@ -45,7 +45,9 @@ def main():
 
         for subfolder in subfolders:
             print(f"Contents of subfolder {subfolder}:")
-            subfolder_contents = glob(os.path.join(subfolder, "*.jpg"))
+            print(glob(subfolder))
+            print(glob(subfolder + "*.jpg"))
+            subfolder_contents = glob(subfolder + "*.jpg")
             print(subfolder_contents)
             food_images.extend(glob(os.path.join(subfolder, "*.jpg")))
 
