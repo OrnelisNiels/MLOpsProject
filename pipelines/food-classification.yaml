@@ -42,27 +42,27 @@ jobs:
       testing_data:
         mode: rw_mount
 
-  training:
-    type: command
-    component: ../components/training/training.yaml
+  # training:
+  #   type: command
+  #   component: ../components/training/training.yaml
 
-    inputs:
-      training_folder: ${{parent.jobs.data_split.outputs.training_data}}
-      testing_folder: ${{parent.jobs.data_split.outputs.testing_data}}
-      epochs: ${{parent.inputs.epochs}}
-    outputs:
-      output_folder:
-        mode: rw_mount
+  #   inputs:
+  #     training_folder: ${{parent.jobs.data_split.outputs.training_data}}
+  #     testing_folder: ${{parent.jobs.data_split.outputs.testing_data}}
+  #     epochs: ${{parent.inputs.epochs}}
+  #   outputs:
+  #     output_folder:
+  #       mode: rw_mount
 
-  register_model:
-    type: command
-    component: azureml://registries/azureml/components/register_model/versions/0.0.9
+  # register_model:
+  #   type: command
+  #   component: azureml://registries/azureml/components/register_model/versions/0.0.9
 
-    inputs:
-      model_name: food-classification
-      model_type: custom_model
-      model_path: ${{parent.jobs.training.outputs.output_folder}}
-    outputs:
-      registration_details_folder: ${{parent.outputs.model}}
+  #   inputs:
+  #     model_name: food-classification
+  #     model_type: custom_model
+  #     model_path: ${{parent.jobs.training.outputs.output_folder}}
+  #   outputs:
+  #     registration_details_folder: ${{parent.outputs.model}}
 
   
