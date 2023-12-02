@@ -46,8 +46,10 @@ def main():
 
                 # Create a flipped version of the image
                 flipped_img = np.fliplr(img_resized)
-                output_file = os.path.join(output_class_folder, "flipped_" + os.path.basename(file))
-                flipped_img.convert("RGB").save(output_file)
+                
+                # Convert np array back to PIL image
+                flipped_img = Image.fromarray(flipped_img)
+                flipped_img.convert("RGB").save(output_file.replace(".jpg", "_flipped.jpg"))
 
             
 if __name__ == "__main__":
