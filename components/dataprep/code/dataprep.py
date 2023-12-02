@@ -48,6 +48,9 @@ def main():
                 img_resized = img.resize(size)
                 img_array = np.expand_dims(np.array(img_resized), axis=0)
 
+                # Add channel dimension for RGB images
+                img_array = np.expand_dims(img_array, axis=-1)  # Assuming grayscale images
+
                 # Save the resized image to the output directory
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
                 img_resized.convert("RGB").save(output_file)
