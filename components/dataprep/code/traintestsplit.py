@@ -32,6 +32,7 @@ def main():
     testing_datapaths = []
 
     for dataset in datasets:
+        print(f"Processing dataset: {dataset}")
         food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
         print(f"Found {len(food_images)} images for {dataset}")
 
