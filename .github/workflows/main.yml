@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: 'Az CLI login'
         uses: azure/login@v1
@@ -51,7 +51,7 @@ jobs:
         id: azure-ml-compute
         if: ${{ inputs.create_compute }}
         with:
-          azcliversion: 2.0.72
+          azcliversion: 2.53.0
           inlineScript: |
             az extension add --name ml -y
             az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
@@ -62,7 +62,7 @@ jobs:
         id: azure-ml-compute-start
         if: ${{ steps.azure-ml-compute.outcome == 'success' || steps.azure-ml-compute.outcome == 'skipped' }}
         with:
-          azcliversion: 2.0.72
+          azcliversion: 2.53.0
           inlineScript: |
             az extension add --name ml -y
             az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
