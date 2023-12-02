@@ -44,14 +44,10 @@ def main():
         food_images = []
 
         for subfolder in subfolders:
-            print(glob(subfolder))
-            print(glob(os.path.join(subfolder)))
-            print(glob(os.path.join(subfolder, "*")))
-            # print(glob(os.path.join(subfolder, "*.jpg")))
             subfolder_contents = glob(subfolder + "*")
             print(f"Contents of subfolder {subfolder}:")
             print(subfolder_contents)
-            class_folder = glob(os.join(subfolder, "*"))
+            class_folder = glob(os.path.join(subfolder, "*"))
             
             for img in class_folder:
                 food_images.append(img)
