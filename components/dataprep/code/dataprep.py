@@ -50,17 +50,29 @@ def main():
 
                 # Save the resized image to the output directory
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
-                img_resized.convert("RGB").save(output_file)
+                # img_resized.convert("RGB").save(output_file)
 
-                # Augment the resized image
-                augmented_images = datagen.flow(img_resized)[0] 
+                # # Augment the resized image
+                # augmented_images = datagen.flow(img_resized)[0] 
 
-                # Save the augmented images
-                for i, augmented_image in enumerate(augmented_images):
-                    output_filename = f"augmented_{i}_{os.path.basename(file)}"
-                    output_file = os.path.join(output_class_folder, output_filename)
-                    augmented_image = Image.fromarray(augmented_image.astype('uint8'))
-                    augmented_image.convert("RGB").save(output_file)
+                # # Save the augmented images
+                # for i, augmented_image in enumerate(augmented_images):
+                #     output_filename = f"augmented_{i}_{os.path.basename(file)}"
+                #     output_file = os.path.join(output_class_folder, output_filename)
+                #     augmented_image = Image.fromarray(augmented_image.astype('uint8'))
+                #     augmented_image.convert("RGB").save(output_file)
+               
+               
+                # Convert the resized image to HSV color space
+                img_resized_hsv = np.array(img_resized.convert("HSV"))
+
+                # Save the HSV image
+                output_filename = f"hsv_{os.path.basename(file)}"
+                output_file = os.path.join(output_class_folder, output_filename)
+                Image.fromarray(img_resized_hsv.astype('uint8'), 'HSV').save(output_file)
+
+
+
 
 if __name__ == "__main__":
     main()
