@@ -24,28 +24,45 @@ jobs:
       data:
         type: uri_folder
         path: azureml:food:1
-    
+
     outputs:
       output_data:
         mode: rw_mount
     
-  # data_split:
-  #   type: command
-  #   component: ../components/dataprep/data_split.yaml
+  data_split:
+    type: command
+    component: ../components/dataprep/data_split.yaml
 
-  #   inputs:
-  #     food_train: ${{parent.jobs.data_prep.outputs.output_data}}
-  #     food_test:
-  #       type: uri_folder
-  #       path: data_prep.outputs.output_data
-  #     food_validation:
-  #       type: uri_folder
-  #       path: data_prep.outputs.output_data
-  #     train_test_split_factor: ${{parent.inputs.training_test_split_factor}}
+    inputs:
+      food_data: ${{parent.jobs.data_prep.outputs.output_data}}
+      train_test_split_factor: ${{parent.inputs.training_test_split_factor}}
+    outputs:
+      training_data:
+        mode: rw_mount
+      testing_data:
+        mode: rw_mount
 
-  #   outputs:
-  #     training_data:
-  #       mode: rw_mount
-  #     testing_data:
-  #       mode: rw_mount
+  training:
+    type: command
+    component: ../components/training/training.yaml
+
+    inputs:
+      training_folder: ${{parent.jobs.data_split.outputs.training_data}}
+      testing_folder: ${{parent.jobs.data_split.outputs.testing_data}}
+      epochs: ${{parent.inputs.epochs}}
+    outputs:
+      output_folder:
+        mode: rw_mount
+
+  register_model:
+    type: command
+    component: azureml://registries/azureml/components/register_model/versions/0.0.9
+
+    inputs:
+      model_name: food-classification
+      model_type: custom_model
+      model_path: ${{parent.jobs.training.outputs.output_folder}}
+    outputs:
+      registration_details_folder: ${{parent.outputs.model}}
+
   

@@ -5,27 +5,18 @@ is_deterministic: true
 code: ./code
 type: command
 
-command: 'python traintestsplit.py --datasets ${{inputs.food_train}} ${{inputs.food_test}} ${{inputs.food_validation}}
- --training_data ${{outputs.training_data}} --testing_data ${{outputs.testing_data}} 
- --split_size ${{inputs.train_test_split_factor}}'
+command: 'python traintestsplit_food.py --datasets ${{inputs.food_data}} --training_data ${{outputs.training_data}} --testing_data ${{outputs.testing_data}} --split_size ${{inputs.train_test_split_factor}}'
 creation_context:
-  created_at: '2023-10-10T12:13:27.775875+00:00'
+  created_at: '2023-12-01T12:13:27.775875+00:00'
   created_by: Ornelis Niels
   created_by_type: User
-  last_modified_at: '2023-10-10T12:13:27.909676+00:00'
+  last_modified_at: '2023-12-01T12:13:27.909676+00:00'
   last_modified_by: Ornelis Niels
   last_modified_by_type: User
 display_name: Data Splitting to Train and Test
 environment: azureml:aml-Pillow-cli:0.1.0
-id: azureml:/subscriptions/7615272e-e6e5-4530-89f1-2aabe4e67715/resourceGroups/MLops/providers/Microsoft.MachineLearningServices/workspaces/ornelis-niels-ml/components/data_split/versions/2023-10-10-12-13-27-1533729
 inputs:
-  food_train:
-    optional: false
-    type: uri_folder
-  food_test:
-    optional: false
-    type: uri_folder
-  food_validation:
+  food_data:
     optional: false
     type: uri_folder
   train_test_split_factor:

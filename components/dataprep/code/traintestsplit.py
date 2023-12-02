@@ -1,13 +1,16 @@
 import os
 import argparse
+import logging
 from glob import glob
 import math
 import random
-import shutil
 
 def main():
+    """Main function of the script."""
+
     SEED = 42
 
+    # input and output arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("--datasets", type=str, nargs="+", help="All the datasets to combine")
     parser.add_argument("--split_size", type=int, help="Percentage to use as Testing data")
@@ -29,28 +32,31 @@ def main():
     testing_datapaths = []
 
     for dataset in datasets:
-        class_folders = glob(os.path.join(dataset, "*"))
+        food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
+        print(f"Found {len(food_images)} images for {dataset}")
 
-        for class_folder in class_folders:
-            class_name = os.path.basename(class_folder)
-            class_images = glob(os.path.join(class_folder, "*.jpg"))
+        random.seed(SEED)
+        random.shuffle(food_images)
 
-            random.seed(SEED)
-            random.shuffle(class_images)
+        amount_of_test_images = math.ceil(len(food_images) * train_test_split_factor)
 
-            amount_of_test_images = math.ceil(len(class_images) * train_test_split_factor)
+        food_test_images = food_images[:amount_of_test_images]
+        food_training_images = food_images[amount_of_test_images:]
 
-            class_test_images = class_images[:amount_of_test_images]
-            class_training_images = class_images[amount_of_test_images:]
+        testing_datapaths.extend(food_test_images)
+        training_datapaths.extend(food_training_images)
 
-            testing_datapaths.extend(class_test_images)
-            training_datapaths.extend(class_training_images)
+        print(testing_datapaths[:5])
 
-            for img in class_test_images:
-                shutil.copy(img, os.path.join(args.testing_data_output, class_name, os.path.basename(img)))
+        for img in food_test_images:
+            with open(img, "rb") as f:
+                with open(os.path.join(args.testing_data_output, os.path.basename(img)), "wb") as f2:
+                    f2.write(f.read())
 
-            for img in class_training_images:
-                shutil.copy(img, os.path.join(args.training_data_output, class_name, os.path.basename(img)))
+        for img in food_training_images:
+            with open(img, "rb") as f:
+                with open(os.path.join(args.training_data_output, os.path.basename(img)), "wb") as f2:
+                    f2.write(f.read())
 
 if __name__ == "__main__":
     main()
