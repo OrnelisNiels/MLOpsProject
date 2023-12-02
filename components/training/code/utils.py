@@ -8,8 +8,8 @@ from tensorflow.keras.utils import to_categorical
 from typing import List
 
 def getTargets(filepaths: List[str]) -> List[str]:
-    labels = [fp.split('/')[-1].split('_')[0] for fp in filepaths] # Get only the animal name
-
+    labels = [fp.split('/')[-1].split('_')[0] for fp in filepaths]  # Get only the animal name
+    print(labels)  # Add this line to print labels
     return labels
 
 from typing import List
@@ -20,6 +20,9 @@ def encodeLabels(y_train: List, y_test: List):
     label_encoder = LabelEncoder()
     y_train_labels = label_encoder.fit_transform(y_train)
     y_test_labels = label_encoder.transform(y_test)
+
+    print(f"y_train_labels: {y_train_labels}")
+    print(f"y_test_labels: {y_test_labels}")
 
     if len(y_train_labels) == 0 or len(y_test_labels) == 0:
         raise ValueError("Empty label array. Make sure your data is correctly loaded.")
