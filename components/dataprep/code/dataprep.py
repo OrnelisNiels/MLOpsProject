@@ -53,7 +53,7 @@ def main():
                 img_resized.convert("RGB").save(output_file)
 
                 # Augment the resized image
-                augmented_images = datagen.flow(np.expand_dims(img_resized, 0))[0]
+                augmented_images = datagen.flow(img_resized)[0] 
 
                 # Save the augmented images
                 for i, augmented_image in enumerate(augmented_images):
