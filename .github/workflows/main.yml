@@ -53,7 +53,7 @@ jobs:
         with:
           azcliversion: 2.53.0
           inlineScript: |
-            az extension add --name ml -y
+            az extension add --name ml -y --debug
             az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
             az ml compute create --file ./environments/compute.yaml
 
