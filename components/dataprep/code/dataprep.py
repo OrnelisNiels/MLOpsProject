@@ -30,7 +30,6 @@ def main():
         channel_shift_range=0,     # Ensure the number of channels remains the same
     )
 
-
     # Iterate through train, test, validation folders
     for split_folder in ["train", "test", "validation"]:
         input_split_folder = os.path.join(args.data, split_folder)
@@ -48,19 +47,24 @@ def main():
             for file in glob(os.path.join(class_folder, "*.jpg")):
                 img = Image.open(file)
                 img_resized = img.resize(size)
-                img_array = np.expand_dims(img_resized, axis=0)  # Add batch dimension
-                img_array = np.repeat(img_array, 3, axis=-1)  # Repeat the single channel to simulate RGB
 
-                # Save the resized image to the output directoryA
+                # Save the resized image to the output directory
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
                 img_resized.convert("RGB").save(output_file)
 
-                # Generate 5 augmented images and save them to the output directory
-                for i, batch in enumerate(datagen.flow(img_array, batch_size=1)):
-                    if i >= 5:
+                # Apply data augmentation and save augmented images
+                augmented_images = []
+                img_array = np.array(img_resized)
+                img_array = img_array.reshape((1,) + img_array.shape)
+                for batch in datagen.flow(img_array, batch_size=1):
+                    augmented_images.append(batch[0].astype(np.uint8))
+                    if len(augmented_images) >= 2:  # Adjust the number of augmentations as needed
                         break
 
-                    augmented_img = Image.fromarray(batch[0].astype(np.uint8))
-                    augmented_img.save(os.path.join(output_class_folder, f"augmented_{i}_{os.path.basename(file)}"))
+                for i, augmented_img in enumerate(augmented_images):
+                    augmented_img_pil = Image.fromarray(augmented_img)
+                    augmented_output_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
+                    augmented_img_pil.convert("RGB").save(augmented_output_file)
+
 if __name__ == "__main__":
     main()
