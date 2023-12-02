@@ -41,7 +41,10 @@ def getFeatures(filepaths: List[str]) -> np.array:
         image = Image.open(imagePath).convert("RGB")
         image = np.array(image)
         images.append(image)
+    print(f"Number of loaded images: {len(images)}")
+    print("Shapes:", images[0].shape if images else None)
     return np.array(images)
+
 
 
 def buildModel(inputShape: tuple, classes: int) -> Sequential:

@@ -52,9 +52,12 @@ def main():
 
     MAX_EPOCHS = args.epochs
 
-    # As we're mounting the training_folder and testing_folder onto the `/mnt/data` directories, we can load in the images by using glob.
+    # As we're mounting the training_folder and testing_folders onto the `/mnt/data` directories, we can load in the images by using glob.
     training_paths = glob(training_folder + "/*.jpg", recursive=True)
     testing_paths = glob(testing_folder + "/*.jpg", recursive=True)
+
+    print("Training paths:", training_paths)
+    print("Testing paths:", testing_paths)
 
     print("Training samples:", len(training_paths))
     print("Testing samples:", len(testing_paths))
