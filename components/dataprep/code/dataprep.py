@@ -22,15 +22,11 @@ def main():
     output_dir = args.output_data
     size = (100, 100)  # You can adjust the size as needed
 
-    # Data augmentation settings
+    # Data augmentation settings (random rotations and flips)
     datagen = ImageDataGenerator(
-        rotation_range=40,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        horizontal_flip=True,
-        fill_mode='nearest'
+        rotation_range=180,  # Random rotations from 0 to 180 degrees
+        horizontal_flip=True,  # Random horizontal flips
+        vertical_flip=True,  # Random vertical flips
     )
 
     # Iterate through train, test, validation folders
@@ -54,7 +50,7 @@ def main():
 
                 # Save the resized image to the output directory
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
-                img_resized.save(output_file)
+                img_resized.convert("RGB").save(output_file)
 
                 # Apply data augmentation and save augmented images
                 aug_iter = datagen.flow(img_array, batch_size=1)
@@ -63,8 +59,7 @@ def main():
                     aug_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
 
                     # Convert to RGB before saving
-                    aug_img = aug_img.convert("RGB")
-                    aug_img.save(aug_file)
+                    aug_img.convert("RGB").save(aug_file)
 
 if __name__ == "__main__":
     main()
