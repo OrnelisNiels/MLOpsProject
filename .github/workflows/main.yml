@@ -32,3 +32,53 @@ env:
   TRAIN_MODEL: ${{ github.event.inputs.train_model }}
   SKIP_TRAINING_PIPELINE: ${{ github.event.inputs.skip_training_pipeline }}
   DEPLOY_MODEL: ${{ github.event.inputs.deploy_model }}
+
+jobs:
+  azure-pipeline:
+    if: ${{ inputs.skip_training_pipeline != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v2
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'Create compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute
+        if: ${{ inputs.create_compute }}
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute create --file ./environments/compute.yaml
+
+      - name: 'Start compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute-start
+        if: ${{ steps.azure-ml-compute.outcome == 'success' || steps.azure-ml-compute.outcome == 'skipped' }}
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute start --name cli-MLops-compute
+        continue-on-error: true
+      
+      - name: 'Cleanup Azure stop compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute-stop
+        if: always()
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute stop --name cli-MLops-compute
+        continue-on-error: true
+      
+      
