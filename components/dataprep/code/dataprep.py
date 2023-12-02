@@ -46,23 +46,21 @@ def main():
             for file in glob(os.path.join(class_folder, "*.jpg")):
                 img = Image.open(file)
                 img_resized = img.resize(size)
-                img_array = np.expand_dims(np.array(img_resized), axis=-1)  # Assuming grayscale images
+                img_array = np.expand_dims(img_resized, axis=0)  # Add batch dimension
                 img_array = np.repeat(img_array, 3, axis=-1)  # Repeat the single channel to simulate RGB
 
-                # Save the resized image to the output directory
+                # Save the resized image to the output directoryA
                 output_file = os.path.join(output_class_folder, os.path.basename(file))
                 img_resized.convert("RGB").save(output_file)
 
                 # Apply data augmentation and save augmented images
-                img_array_with_batch = np.expand_dims(img_array, axis=0)  # Add batch dimension
-                aug_iter = datagen.flow(img_array_with_batch, batch_size=1)
+                aug_iter = datagen.flow(img_array, batch_size=1)
                 for i in range(5):  # Generating 5 augmented images per original image
                     aug_img = Image.fromarray(aug_iter.next()[0].astype('uint8'))
                     aug_file = os.path.join(output_class_folder, f"aug_{i}_{os.path.basename(file)}")
 
                     # Convert to RGB before saving
                     aug_img.convert("RGB").save(aug_file)
-
 
 if __name__ == "__main__":
     main()
