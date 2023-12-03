@@ -27,8 +27,11 @@ def encodeLabels(y_train: List, y_test: List):
     if len(y_train_labels) == 0 or len(y_test_labels) == 0:
         raise ValueError("Empty label array. Make sure your data is correctly loaded.")
 
-    y_train_1h = to_categorical(y_train_labels)
-    y_test_1h = to_categorical(y_test_labels)
+    num_classes = len(np.unique(y_train_labels))
+    print(f"Number of classes: {num_classes}")
+    
+    y_train_1h = to_categorical(y_train_labels, num_classes=num_classes)
+    y_test_1h = to_categorical(y_test_labels, num_classes=num_classes)
 
     LABELS = label_encoder.classes_
     print(f"{LABELS} -- {label_encoder.transform(LABELS)}")
