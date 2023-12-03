@@ -56,9 +56,6 @@ def main():
     training_paths = glob(training_folder + "/*.jpg", recursive=True)
     testing_paths = glob(testing_folder + "/*.jpg", recursive=True)
 
-    print("Training paths:", training_paths)
-    print("Testing paths:", testing_paths)
-
     print("Training samples:", len(training_paths))
     print("Testing samples:", len(testing_paths))
 

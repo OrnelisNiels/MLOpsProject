@@ -6,9 +6,12 @@ from tensorflow.keras.layers import Dense, BatchNormalization, Conv2D, MaxPoolin
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
 from typing import List
+import os
 
 def getTargets(filepaths: List[str]) -> List[str]:
-    labels = [fp.split('/')[-1].split('_')[0] for fp in filepaths]  # Get only the animal name
+    print(filepaths)
+    # labels = [fp.split('/')[-1].split('_')[0] for fp in filepaths] 
+    labels = [os.path.splitext(os.path.basename(fp))[0] for fp in filepaths]
     print(labels)  # Add this line to print labels
     return labels
 
