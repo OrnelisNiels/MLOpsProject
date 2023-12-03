@@ -46,28 +46,28 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      # - name: 'Create compute'
-      #   uses: azure/CLI@v1
-      #   id: azure-ml-compute
-      #   if: ${{ inputs.create_compute }}
-      #   with:
-      #     azcliversion: 2.53.0
-      #     inlineScript: |
-      #       az extension add --name ml -y
-      #       az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
-      #       az ml compute create --file ./environments/compute.yaml
+      - name: 'Create compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute
+        if: ${{ inputs.create_compute }}
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute create --file ./environments/compute.yaml
 
-      # - name: 'Start compute'
-      #   uses: azure/CLI@v1
-      #   id: azure-ml-compute-start
-      #   if: ${{ steps.azure-ml-compute.outcome == 'skipped' }}
-      #   with:
-      #     azcliversion: 2.53.0
-      #     inlineScript: |
-      #       az extension add --name ml -y
-      #       az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
-      #       az ml compute start --name cli-MLops-compute
-      #   continue-on-error: true
+      - name: 'Start compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute-start
+        if: ${{ steps.azure-ml-compute.outcome == 'skipped' }}
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute start --name cli-MLops-compute
+        continue-on-error: true
       
       - name: 'Run pipeline'
         uses: azure/CLI@v1
@@ -84,16 +84,16 @@ jobs:
             echo "Latest version of model is: $VERSION"
             echo "::set-output name=latest_version::$VERSION"
 
-      # - name: 'Cleanup Azure stop compute'
-      #   uses: azure/CLI@v1
-      #   id: azure-ml-compute-stop
-      #   if: always()
-      #   with:
-      #     azcliversion: 2.53.0
-      #     inlineScript: |
-      #       az extension add --name ml -y
-      #       az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
-      #       az ml compute stop --name cli-MLops-compute
-      #   continue-on-error: true
+      - name: 'Cleanup Azure stop compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute-stop
+        if: always()
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute stop --name cli-MLops-compute
+        continue-on-error: true
       
       

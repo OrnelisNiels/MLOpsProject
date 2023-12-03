@@ -7,7 +7,7 @@ experiment_name: classification
 
 inputs:
   training_test_split_factor: 20
-  epochs: 5
+  epochs: 50
 outputs:
   model:
     type: uri_folder
