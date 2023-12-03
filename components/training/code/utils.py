@@ -9,11 +9,14 @@ from typing import List
 import os
 
 def getTargets(filepaths: List[str]) -> List[str]:
-    # print(filepaths)
-    # labels = [fp.split('/')[-1].split('_')[0] for fp in filepaths] 
-    labels = [os.path.splitext(os.path.basename(fp))[0] for fp in filepaths]
-    print(f"labels {labels}")  # Add this line to print labels
-    return labels
+   # Extract class names from filenames by splitting on underscores
+    labels = [os.path.splitext(os.path.basename(fp))[0].split('_')[0] for fp in filepaths]
+    
+    # Remove duplicates by converting to set and back to list
+    unique_labels = list(set(labels))
+    
+    print(f"labels {unique_labels}")  # Add this line to print labels
+    return unique_labels
 
 from typing import List
 from tensorflow.keras.utils import to_categorical
