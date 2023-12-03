@@ -47,14 +47,16 @@ def main():
             class_folder = glob(os.path.join(subfolder, "*"))
             print(f"class_folder: {class_folder}")
             for img in class_folder:
-                image = glob(os.path.join(img, "*.jpg"))
-                print (image)
+                # image = glob(os.path.join(img, "*.jpg"))
+                # print (image)
                 # Change image name to classname_image.jpg
-                print([os.path.join(img, os.path.basename(img) + "_" + os.path.basename(image[0])) for img in class_folder])
+                image = [os.path.join(img, os.path.basename(img) + "_" + os.path.basename(image[0])) for img in class_folder]
                 food_images.extend(image)
 
         # food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
         print(f"Found {len(food_images)} images for {dataset}")
+
+        print(f"5 examples of food images: {food_images[:5]}")
 
         random.seed(SEED)
         random.shuffle(food_images)
