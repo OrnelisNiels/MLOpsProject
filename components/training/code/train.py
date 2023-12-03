@@ -111,7 +111,7 @@ def main():
 
     opt = tf.keras.optimizers.legacy.SGD(lr=INITIAL_LEARNING_RATE, decay=INITIAL_LEARNING_RATE / MAX_EPOCHS) # Define the Optimizer
 
-    model = buildModel((64, 64, 3), 3) # Create the AI model as defined in the utils script.
+    model = buildModel((100, 100, 3), 36) # Create the AI model as defined in the utils script.
 
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
