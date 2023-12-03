@@ -74,19 +74,15 @@ def main():
         for img in food_test_images:
             class_name = os.path.basename(os.path.dirname(img))
             new_filename = os.path.join(args.testing_data_output, class_name + "_" + os.path.basename(img))
+            print(new_filename)
             with open(img, "rb") as f:
-                with open(new_filename, "wb") as f2:
+                with open(os.path.join(args.testing_data_output, os.path.basename(img)), "wb") as f2:
                     f2.write(f.read())
 
         for img in food_training_images:
-            class_name = os.path.basename(os.path.dirname(img))
-            new_filename = os.path.join(args.training_data_output, class_name + "_" + os.path.basename(img))
             with open(img, "rb") as f:
-                with open(new_filename, "wb") as f2:
+                with open(os.path.join(args.training_data_output, os.path.basename(img)), "wb") as f2:
                     f2.write(f.read())
-            # with open(img, "rb") as f:
-            #     with open(os.path.join(args.training_data_output, os.path.basename(img)), "wb") as f2:
-            #         f2.write(f.read())
 
 if __name__ == "__main__":
     main()
