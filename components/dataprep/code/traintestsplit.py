@@ -45,10 +45,12 @@ def main():
 
         for subfolder in subfolders:
             class_folder = glob(os.path.join(subfolder, "*"))
-            
+            print(f"class_folder: {class_folder}")
             for img in class_folder:
                 image = glob(os.path.join(img, "*.jpg"))
                 print (image)
+                # Change image name to classname_image.jpg
+                print([os.path.join(img, os.path.basename(img) + "_" + os.path.basename(image[0])) for img in class_folder])
                 food_images.extend(image)
 
         # food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
