@@ -133,7 +133,8 @@ def main():
 
     print("[INFO] evaluating network...")
     predictions = model.predict(X_test, batch_size=32)
-    print(classification_report(y_test.argmax(axis=1), predictions.argmax(axis=1), target_names=['cats', 'dogs', 'panda'])) # Give the target names to easier refer to them.
+    class_names = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'carrot','cauliflower', 'chilli pepper', 'corn', 'cucumber', 'eggplant', 'garlic','ginger', 'grapes', 'jalepeno', 'kiwi', 'lemon', 'lettuce', 'mango', 'onion','orange', 'paprika', 'pear', 'peas', 'pineapple', 'pomegranate', 'potato','raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato','turnip', 'watermelon']
+    print(classification_report(y_test.argmax(axis=1), predictions.argmax(axis=1), target_names=class_names)) # Give the target names to easier refer to them.
     # If you want, you can enter the target names as a parameter as well, in case you ever adapt your AI model to more animals.
 
     cf_matrix = confusion_matrix(y_test.argmax(axis=1), predictions.argmax(axis=1))
