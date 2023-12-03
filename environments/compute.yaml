@@ -13,5 +13,5 @@ schedules:
       start_time: "2023-10-16T15:00:00"
       type: cron
 
-idle_time_before_shutdown: PT30M
-idle_time_before_shutdown_minutes: 30
+idle_time_before_shutdown: PT60M
+idle_time_before_shutdown_minutes: 60

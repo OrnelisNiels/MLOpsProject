@@ -28,10 +28,10 @@ env:
   GROUP: MLops
   WORKSPACE: ornelis-niels-ml
   LOCATION: westeurope
-  # CREATE_COMPUTE: ${{ github.event.inputs.create_compute }}
+  CREATE_COMPUTE: ${{ github.event.inputs.create_compute }}
   TRAIN_MODEL: ${{ github.event.inputs.train_model }}
   SKIP_TRAINING_PIPELINE: ${{ github.event.inputs.skip_training_pipeline }}
-  # DEPLOY_MODEL: ${{ github.event.inputs.deploy_model }}
+  DEPLOY_MODEL: ${{ github.event.inputs.deploy_model }}
 
 jobs:
   azure-pipeline:
@@ -95,5 +95,79 @@ jobs:
             az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
             az ml compute stop --name cli-MLops-compute
         continue-on-error: true
+  download:
+    runs-on: ubuntu-latest
+    needs: azure-pipeline
+    if: ${{ needs.azure-pipeline.result == 'success' }} || ${{ needs.azure-pipeline.result == 'skipped' }} 
+    steps:
+      - name: 'AZ CLI login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Download model'
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            VERSION=$(az ml model list -n food-classification --query '[0].version')
+            version=$(echo $VERSION | tr -d '"')
+            echo "Latest version of model is: $version"
+            echo "::set-output name=latest_version::$version"
+            az ml model download --name food-classification --download-path ./inference --version $version
       
+      - name: 'Upload api code'
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-config
+          path: inference
       
+  deploy:
+    runs-on: ubuntu-latest
+    needs: download
+    if:  ${{ ( needs.download.result == 'success'  ||  needs.download.result == 'skipped'  ) &&  inputs.deploy_model  }} 
+    steps:
+      - name: 'AZ CLI login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'Gather Docker Meta Information'
+        id: docker-metadata
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/ornelisniels/mlops-animals-api
+          tags: |
+            type=ref,event=branch
+            type=sha
+
+      # Enter your GITHUB Token here!
+      - name: Login to GHCR
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ornelisniels
+          password: ${{ secrets.TOKEN_GITHUB }}
+
+      # Download artifacts
+      - name: Download API code for Docker
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-config
+          path: inference
+
+      - name: 'Debug: List files in ./inference'
+        run: ls ./inference
+
+      - name: Docker Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./inference
+          dockerfile: ./inference/Dockerfile
+          push: true
+          tags: ${{ steps.docker-metadata.outputs.tags }}
