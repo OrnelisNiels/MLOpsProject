@@ -50,7 +50,7 @@ def main():
                 image = glob(os.path.join(img, "*.jpg"))
                 # print (image)
                 # Change image name to classname_image.jpg
-                image = [os.path.join(img, os.path.basename(img) + "_" + os.path.basename(image[0])) for img in class_folder]
+                # image = [os.path.join(img, os.path.basename(img) + "_" + os.path.basename(image[0])) for img in class_folder]
                 food_images.extend(image)
 
         # food_images = glob(os.path.join(dataset, "*/*.jpg"))  # Assuming the images are in subfolders named after classes
@@ -72,14 +72,21 @@ def main():
         print(testing_datapaths[:5])
 
         for img in food_test_images:
+            class_name = os.path.basename(os.path.dirname(img))
+            new_filename = os.path.join(args.testing_data_output, class_name + "_" + os.path.basename(img))
             with open(img, "rb") as f:
-                with open(os.path.join(args.testing_data_output, os.path.basename(img)), "wb") as f2:
+                with open(new_filename, "wb") as f2:
                     f2.write(f.read())
 
         for img in food_training_images:
+            class_name = os.path.basename(os.path.dirname(img))
+            new_filename = os.path.join(args.training_data_output, class_name + "_" + os.path.basename(img))
             with open(img, "rb") as f:
-                with open(os.path.join(args.training_data_output, os.path.basename(img)), "wb") as f2:
+                with open(new_filename, "wb") as f2:
                     f2.write(f.read())
+            # with open(img, "rb") as f:
+            #     with open(os.path.join(args.training_data_output, os.path.basename(img)), "wb") as f2:
+            #         f2.write(f.read())
 
 if __name__ == "__main__":
     main()
