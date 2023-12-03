@@ -14,7 +14,7 @@ creation_context:
   last_modified_by: Ornelis Niels
   last_modified_by_type: User
 display_name: Data Splitting to Train and Test
-environment: azureml:aml-Pillow-cli:0.1.0
+environment: azureml:aml-Pillow-cli-project:0.1.0
 inputs:
   food_data:
     optional: false

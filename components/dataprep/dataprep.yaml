@@ -12,7 +12,7 @@ outputs:
   output_data:
     type: uri_folder
 code: ./code
-environment: azureml:aml-Tensorflow-cli:0.1.0
+environment: azureml:aml-Tensorflow-cli-project:0.1.0
 resources:
   instance_count: 1
 command: 'python dataprep.py --data ${{inputs.data}} --output_data ${{outputs.output_data}}'

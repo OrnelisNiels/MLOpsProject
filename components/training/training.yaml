@@ -1,11 +1,11 @@
-version: '0.1.0'
+version: '0.1.1'
 type: command
 name: training
-display_name: Training an AI model
+display_name: Training an AI model to classify food
 description: Trains an AI model by inputting a lot of training and testing data.
 
 code: ./code
-environment: azureml:aml-Tensorflow-cli:0.1.0
+environment: azureml:aml-Tensorflow-cli-project:0.1.0
 command: 'python train.py --training_folder ${{inputs.training_folder}} --testing_folder ${{inputs.testing_folder}} 
   --output_folder ${{outputs.output_folder}} 
   --epochs ${{inputs.epochs}}'

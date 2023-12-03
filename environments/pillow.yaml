@@ -1,0 +1,12 @@
+$schema: https://azuremlschemas.azureedge.net/latest/environment.schema.json
+name: aml-Pillow-cli-project
+version: 0.1.0
+description: Custom environment for Image Processing (with Pillow)
+
+conda_file: ../components/dataprep/conda.yaml
+id: azureml:/subscriptions/7615272e-e6e5-4530-89f1-2aabe4e67715/resourceGroups/MLops/providers/Microsoft.MachineLearningServices/workspaces/ornelis-niels-ml/environments/aml-Pillow/versions/2
+image: mcr.microsoft.com/azureml/openmpi4.1.0-ubuntu20.04:latest
+os_type: linux
+
+tags:
+  Pillow: 10.0.1

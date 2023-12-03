@@ -27,7 +27,7 @@ SEED = 42
 INITIAL_LEARNING_RATE = 0.01
 BATCH_SIZE = 32
 PATIENCE = 11
-model_name = 'animal-cnn'
+model_name = 'food-cnn'
 
 def main():
 
