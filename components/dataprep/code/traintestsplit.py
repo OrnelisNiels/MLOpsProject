@@ -47,7 +47,7 @@ def main():
             class_folder = glob(os.path.join(subfolder, "*"))
             print(f"class_folder: {class_folder}")
             for img in class_folder:
-                # image = glob(os.path.join(img, "*.jpg"))
+                image = glob(os.path.join(img, "*.jpg"))
                 # print (image)
                 # Change image name to classname_image.jpg
                 image = [os.path.join(img, os.path.basename(img) + "_" + os.path.basename(image[0])) for img in class_folder]
