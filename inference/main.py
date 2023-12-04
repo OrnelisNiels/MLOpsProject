@@ -32,6 +32,9 @@ async def root():
 async def uploadImage(img: UploadFile = File(...)):
     original_image = Image.open(img.file)
     original_image = original_image.resize((100, 100))
+    # If image is png, convert it to jpg
+    if original_image.mode == 'RGBA':
+        original_image = original_image.convert('RGB')
     images_to_predict = np.expand_dims(np.array(original_image), axis=0)
     predictions = model.predict(images_to_predict)
     classification = predictions.argmax(axis=1)
