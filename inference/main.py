@@ -21,7 +21,7 @@ FOODS = ['apple', 'banana', 'beetroot', 'bell pepper', 'cabbage', 'capsicum', 'c
  'raddish', 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato',
  'turnip', 'watermelon']
 
-model_path = os.path.join("inference",'animals-classification', 'INPUT_model_path', 'food-cnn')
+model_path = os.path.join('food-classification', 'INPUT_model_path', 'food-cnn')
 model = load_model(model_path)
 
 @app.get("/")
@@ -31,7 +31,7 @@ async def root():
 @app.post('/upload/image')
 async def uploadImage(img: UploadFile = File(...)):
     original_image = Image.open(img.file)
-    resized_image = original_image.resize((100, 100))
+    original_image = original_image.resize((100, 100))
     images_to_predict = np.expand_dims(np.array(original_image), axis=0)
     predictions = model.predict(images_to_predict)
     classification = predictions.argmax(axis=1)

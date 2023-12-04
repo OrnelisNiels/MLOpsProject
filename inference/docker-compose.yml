@@ -4,4 +4,4 @@ services:
     build: .
     ports:
       - 8001:8000
-    image: nielsornelis/mlops-animals-api
+    image: nielsornelis/mlops-food-api
