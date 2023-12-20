@@ -96,7 +96,7 @@ jobs:
 
   azure-pipeline:
     needs: check-and-create-environments
-    if: ${{ needs.check-and-create-environments.result != 'failure' && needs.check-and-create-environments.result != 'cancelled' }}
+    if: ${{ needs.check-and-create-environments.result == 'success'}} || ${{ needs.check-and-create-environments.result == 'skipped' }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
