@@ -148,7 +148,7 @@ jobs:
       - name: 'Cleanup Azure delete compute'
         uses: azure/CLI@v1
         id: azure-ml-compute-delete
-        if: ${{ inputs.delete_compute != 'false' }}
+        if: ${{ inputs.delete_compute }}
         with:
           azcliversion: 2.53.0
           inlineScript: |
@@ -160,7 +160,7 @@ jobs:
       - name: 'Cleanup Azure stop compute'
         uses: azure/CLI@v1
         id: azure-ml-compute-stop
-        if: ${{ inputs.delete_compute == 'false' }}
+        if: ${{ inputs.delete_compute == 'False' }}
         with:
           azcliversion: 2.53.0
           inlineScript: |
