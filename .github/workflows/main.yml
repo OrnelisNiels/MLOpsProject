@@ -95,7 +95,8 @@ jobs:
             check_and_create_environment "aml-Tensorflow" "./environments/tensorflow.yaml"
 
   azure-pipeline:
-    if: ${{ inputs.skip_training_pipeline != 'false' }}
+    needs: check-and-create-environments
+    if:  ${{ (needs.check-and-create-environments.result == 'succes' || needs.needs.check-and-create-environments.result =='skipped')  &&  !inputs.skip_training_pipeline }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout repository'
