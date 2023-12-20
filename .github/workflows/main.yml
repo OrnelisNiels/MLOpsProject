@@ -49,7 +49,7 @@ jobs:
 
   check-and-create-environments:
     runs-on: ubuntu-latest
-    if: ${{ inputs.create_workspace_and_environment != 'false' }}
+    if: ${{ inputs.create_workspace_and_environment != 'False' }}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
