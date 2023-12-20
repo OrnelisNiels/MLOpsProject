@@ -34,6 +34,49 @@ env:
   DEPLOY_MODEL: ${{ github.event.inputs.deploy_model }}
 
 jobs:
+
+  check-and-create-environments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Check if AML Workspace exists'
+        id: check-aml-workspace
+        run: |
+          az extension add --name ml -y
+          az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+          WORKSPACE_EXISTS=$(az ml workspace show --query 'id' -o tsv)
+          echo "Workspace exists: $WORKSPACE_EXISTS"
+          if [ -z "$WORKSPACE_EXISTS" ]; then
+            echo "Creating Azure ML workspace..."
+          fi
+
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Check and Create Environments'
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            check_and_create_environment() {
+              ENV_NAME=$1
+              ENV_FILE=$2
+
+              if ! az ml environment show --name $ENV_NAME --query "name" -o tsv; then
+                echo "Creating Azure ML environment: $ENV_NAME"
+
+              else
+                echo "Azure ML environment $ENV_NAME already exists."
+              fi
+            }
+
+            check_and_create_environment "aml-Pillow" "./environments/pillow.yaml"
+            check_and_create_environment "aml-Tensorflow" "./environments/tensorflow.yaml"
+
   azure-pipeline:
     if: ${{ inputs.skip_training_pipeline != 'false' }}
     runs-on: ubuntu-latest
