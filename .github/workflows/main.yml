@@ -77,6 +77,8 @@ jobs:
           azcliversion: 2.53.0
           inlineScript: |
             az extension add --name azure-cli-ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+
             check_and_create_environment() {
               ENV_NAME=$1
               ENV_FILE=$2
@@ -152,7 +154,7 @@ jobs:
           inlineScript: |
             az extension add --name ml -y
             az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
-            az ml compute delete --name cli-MLops-compute
+            az ml compute delete --name cli-MLops-compute --yes
         continue-on-error: true
 
       - name: 'Cleanup Azure stop compute'
