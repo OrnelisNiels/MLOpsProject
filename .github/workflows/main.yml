@@ -95,7 +95,6 @@ jobs:
             check_and_create_environment "aml-Tensorflow" "./environments/tensorflow.yaml"
 
   azure-pipeline:
-    needs: check-and-create-environments
     if: ${{ inputs.skip_training_pipeline != 'false' }}
     runs-on: ubuntu-latest
     steps:
