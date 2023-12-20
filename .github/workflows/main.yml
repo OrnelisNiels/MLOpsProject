@@ -77,7 +77,7 @@ jobs:
           azcliversion: 2.53.0
           inlineScript: |
             az extension add --name azure-cli-ml -y
-            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml folder attach -w $WORKSPACE -g $GROUP
 
             check_and_create_environment() {
               ENV_NAME=$1
