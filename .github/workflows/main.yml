@@ -3,8 +3,18 @@ name: Azure data preperation, training and deployment
 on:
   workflow_dispatch:
     inputs:
+      create_workspace_and_environment:
+        description: 'Create workspace and environment'
+        required: false
+        type: boolean
+        default: false
       create_compute:
         description: 'Create compute'
+        required: false
+        type: boolean
+        default: true
+      delete_compute:
+        description: 'Delete compute'
         required: false
         type: boolean
         default: true
@@ -28,7 +38,9 @@ env:
   GROUP: MLops
   WORKSPACE: ornelis-niels-ml
   LOCATION: westeurope
+  CREATE_WORKSPACE_AND_ENVIRONMENT: ${{ github.event.inputs.create_workspace_and_environment }}
   CREATE_COMPUTE: ${{ github.event.inputs.create_compute }}
+  DELETE_COMPUTE: ${{ github.event.inputs.delete_compute }}
   TRAIN_MODEL: ${{ github.event.inputs.train_model }}
   SKIP_TRAINING_PIPELINE: ${{ github.event.inputs.skip_training_pipeline }}
   DEPLOY_MODEL: ${{ github.event.inputs.deploy_model }}
@@ -37,6 +49,7 @@ jobs:
 
   check-and-create-environments:
     runs-on: ubuntu-latest
+    if: ${{ inputs.create_workspace_and_environment != 'false' }}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
@@ -130,10 +143,22 @@ jobs:
             echo "Latest version of model is: $VERSION"
             echo "::set-output name=latest_version::$VERSION"
 
+      - name: 'Cleanup Azure delete compute'
+        uses: azure/CLI@v1
+        id: azure-ml-compute-delete
+        if: ${{ inputs.delete_compute != 'false' }}
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name ml -y
+            az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
+            az ml compute delete --name cli-MLops-compute
+        continue-on-error: true
+
       - name: 'Cleanup Azure stop compute'
         uses: azure/CLI@v1
         id: azure-ml-compute-stop
-        if: always()
+        if: ${{ inputs.delete_compute == 'false' }}
         with:
           azcliversion: 2.53.0
           inlineScript: |
