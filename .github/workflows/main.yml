@@ -38,6 +38,14 @@ jobs:
   check-and-create-environments:
     runs-on: ubuntu-latest
     steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v4
+
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: 'Check if AML Workspace exists'
         id: check-aml-workspace
         run: |
@@ -49,16 +57,9 @@ jobs:
             echo "Creating Azure ML workspace..."
           fi
 
-      - name: 'Checkout repository'
-        uses: actions/checkout@v4
-
-      - name: 'Az CLI login'
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
       - name: 'Check and Create Environments'
         uses: azure/CLI@v1
+        if: ${{ steps.check-aml-workspace.outcome == 'success' }}
         with:
           azcliversion: 2.53.0
           inlineScript: |
