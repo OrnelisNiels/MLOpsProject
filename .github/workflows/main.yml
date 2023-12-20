@@ -63,6 +63,7 @@ jobs:
         with:
           azcliversion: 2.53.0
           inlineScript: |
+            az extension add --name azure-cli-ml -y
             check_and_create_environment() {
               ENV_NAME=$1
               ENV_FILE=$2
