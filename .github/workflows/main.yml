@@ -68,6 +68,7 @@ jobs:
           echo "Workspace exists: $WORKSPACE_EXISTS"
           if [ -z "$WORKSPACE_EXISTS" ]; then
             echo "Creating Azure ML workspace..."
+            az ml workspace create -n $WORKSPACE -g $GROUP
           fi
 
       - name: 'Check and Create Environments'
@@ -86,6 +87,7 @@ jobs:
 
               if ! az ml environment show --name $ENV_NAME --query "name" -o tsv; then
                 echo "Creating Azure ML environment: $ENV_NAME with $ENV_FILE"
+                az ml environment create --file $ENV_FILE
 
               else
                 echo "Azure ML environment $ENV_NAME with $ENV_FILE already exists."
@@ -104,21 +106,21 @@ jobs:
             az extension add --name azure-cli-ml -y
             az ml folder attach -w $WORKSPACE -g $GROUP
 
-            check_and_create_component() {
+             check_and_create_component() {
               COMPONENT_NAME=$1
               COMPONENT_FILE=$2
+              COMPONENT_VERSION=$3
 
-              if ! az ml component show --name $COMPONENT_NAME --query "name" -o tsv; then
-                echo "Creating Azure ML component: $COMPONENT_NAME with $COMPONENT_FILE"
-
+              if ! az ml component show --name $COMPONENT_NAME --version $COMPONENT_VERSION --query "name" -o tsv; then
+                echo "Creating Azure ML component: $COMPONENT_NAME with version $COMPONENT_VERSION and $COMPONENT_FILE"
               else
-                echo "Azure ML component $COMPONENT_NAME with $COMPONENT_FILE already exists."
+                echo "Azure ML component $COMPONENT_NAME with version $COMPONENT_VERSION and $COMPONENT_FILE already exists."
               fi
             }
 
-            check_and_create_component "data_prep_image_resize_augment" "./components/data_prep_image_resize_augment.yaml"
-            check_and_create_component "data_split" "./components/data_split.yaml"
-            check_and_create_component "training" "./components/training.yaml"
+            check_and_create_component "data_prep_image_resize_augment" "./components/data_prep_image_resize_augment.yaml" "1.0.0"
+            check_and_create_component "data_split" "./components/data_split.yaml" "0.1.0"
+            check_and_create_component "training" "./components/training.yaml" "0.1.0"
 
   azure-pipeline:
     runs-on: ubuntu-latest
