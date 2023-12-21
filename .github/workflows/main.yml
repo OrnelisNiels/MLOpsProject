@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       create_workspace_and_environment:
-        description: 'Create workspace and environment'
+        description: 'Create workspace, environment, components'
         required: false
         type: boolean
         default: false
@@ -72,6 +72,7 @@ jobs:
 
       - name: 'Check and Create Environments'
         uses: azure/CLI@v1
+        id: check-and-create-environments
         if: ${{ steps.check-aml-workspace.outcome == 'success' }}
         with:
           azcliversion: 2.53.0
@@ -84,15 +85,40 @@ jobs:
               ENV_FILE=$2
 
               if ! az ml environment show --name $ENV_NAME --query "name" -o tsv; then
-                echo "Creating Azure ML environment: $ENV_NAME"
+                echo "Creating Azure ML environment: $ENV_NAME with $ENV_FILE"
 
               else
-                echo "Azure ML environment $ENV_NAME already exists."
+                echo "Azure ML environment $ENV_NAME with $ENV_FILE already exists."
               fi
             }
 
             check_and_create_environment "aml-Pillow-cli-project" "./environments/pillow.yaml"
             check_and_create_environment "aml-Tensorflow-cli-project" "./environments/tensorflow.yaml"
+
+      - name: 'Check and Create Components'
+        uses: azure/CLI@v1
+        if: ${{ steps.check-and-create-environments.outcome == 'success' }}
+        with:
+          azcliversion: 2.53.0
+          inlineScript: |
+            az extension add --name azure-cli-ml -y
+            az ml folder attach -w $WORKSPACE -g $GROUP
+
+            check_and_create_component() {
+              COMPONENT_NAME=$1
+              COMPONENT_FILE=$2
+
+              if ! az ml component show --name $COMPONENT_NAME --query "name" -o tsv; then
+                echo "Creating Azure ML component: $COMPONENT_NAME with $COMPONENT_FILE"
+
+              else
+                echo "Azure ML component $COMPONENT_NAME with $COMPONENT_FILE already exists."
+              fi
+            }
+
+            check_and_create_component "data_prep_image_resize_augment" "./components/data_prep_image_resize_augment.yaml"
+            check_and_create_component "data_split" "./components/data_split.yaml"
+            check_and_create_component "training" "./components/training.yaml"
 
   azure-pipeline:
     runs-on: ubuntu-latest
