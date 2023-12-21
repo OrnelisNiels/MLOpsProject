@@ -13,13 +13,13 @@ on:
         required: false
         type: boolean
         default: true
-      delete_compute:
-        description: 'Delete compute'
+      train_model:
+        description: 'Train model'
         required: false
         type: boolean
         default: true
-      train_model:
-        description: 'Train model'
+      delete_compute:
+        description: 'Delete compute'
         required: false
         type: boolean
         default: true
@@ -91,8 +91,8 @@ jobs:
               fi
             }
 
-            check_and_create_environment "aml-Pillow" "./environments/pillow.yaml"
-            check_and_create_environment "aml-Tensorflow" "./environments/tensorflow.yaml"
+            check_and_create_environment "aml-Pillow-cli-project" "./environments/pillow.yaml"
+            check_and_create_environment "aml-Tensorflow-cli-project" "./environments/tensorflow.yaml"
 
   azure-pipeline:
     runs-on: ubuntu-latest
